@@ -13,7 +13,7 @@ app.use('/api/donations', require('./routes/donationRoutes'));
 app.use('/api/volunteers', require('./routes/volunteerRoutes'));
 app.use('/api/organizations', require('./routes/organizationRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
-
+app.use('/api/emergency', require('./routes/emergencyRoutes'));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

@@ -17,6 +17,15 @@ exports.getAllOrphans = (req, res) => {
   });
 };
 
+exports.getOrphanById = (req, res) => {
+  Orphan.getById(req.params.id, (err, result) => {
+    if (err || result.length === 0) return res.status(404).json({ message: 'Not found' });
+    res.json(result[0]);
+  });
+};
+
+
+
 exports.getOrphanDetails = (req, res) => {
   const id = req.params.id;
   Orphan.getById(id, (err, orphanData) => {

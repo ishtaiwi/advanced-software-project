@@ -11,8 +11,9 @@ router.post('/',
   body('organization_id').isInt(),
   body('rating').isInt({ min: 1, max: 5 }),
   validate,
-  reviewController.leaveReview // ✅ do NOT use ()
+  reviewController.leaveReview
 );
 
-router.get('/:id', reviewController.getOrganizationReviews); // ✅ no ()
+router.get('/:id', reviewController.getOrganizationReviews);
+
 module.exports = router;
