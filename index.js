@@ -11,7 +11,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/orphans', require('./routes/orphanRoutes'));
 app.use('/api/donations', require('./routes/donationRoutes'));
 app.use('/api/volunteers', require('./routes/volunteerRoutes'));
-
+app.use('/api/organizations', require('./routes/organizationRoutes'));
+app.use('/api/reviews', require('./routes/reviewRoutes'));
 
 
 const PORT = process.env.PORT || 3000;
