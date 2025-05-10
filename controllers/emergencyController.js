@@ -2,44 +2,54 @@ const Emergency = require('../models/emergencyModel');
 const db = require('../config/db');
 const nodemailer = require('nodemailer');
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_FROM,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 exports.createCampaign = (req, res) => {
   const { title, description, required_amount } = req.body;
 
   Emergency.createCampaign([title, description, required_amount], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // Get all donor emails
     Emergency.getAllDonors((err, donors) => {
-      if (err) return res.status(500).json({ message: 'Campaign created, but failed to fetch donors.' });
+      if (err) {
+        console.error('Failed to get donors:', err.message);
+        return res.status(500).json({ msg: 'Campaign created, but email failed' });
+      }
+
+      if (!donors.length) {
+        return res.status(201).json({ msg: 'Campaign created, but no donors found', id: result.insertId });
+      }
 
       const emails = donors.map(d => d.email);
-      if (emails.length === 0) return res.status(201).json({ msg: 'Campaign created, no donors to notify.' });
-
-      // Send notification email
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_FROM,
-          pass: process.env.EMAIL_PASS
-        }
-      });
-
       const mailOptions = {
         from: `"HopeConnect" <${process.env.EMAIL_FROM}>`,
         to: emails.join(','),
-        subject: `🚨 New Emergency Campaign: ${title}`,
-        text: `${description}\n\nTarget Amount: $${required_amount}`
+        subject: `🚨 Emergency Campaign: ${title}`,
+        text: `📢 A new emergency campaign has been launched.\n\n📝 Description: ${description}\n🎯 Goal: $${required_amount}\n\nPlease consider supporting!`,
       };
 
       transporter.sendMail(mailOptions, (err, info) => {
-        if (err) console.error('Email error:', err);
-        else console.log('Emails sent:', info.accepted);
+        if (err) {
+          console.error('Email sending failed:', err.message);
+        } else {
+          console.log(`Email sent to: ${info.accepted.join(', ')}`);
+        }
       });
 
-      res.status(201).json({ msg: 'Campaign created and donors notified', id: result.insertId });
+      res.status(201).json({
+        msg: 'Campaign created and email notifications sent.',
+        id: result.insertId,
+      });
     });
   });
 };
+
 
 exports.getCampaigns = (req, res) => {
   Emergency.getAll((err, campaigns) => {

@@ -1,12 +1,23 @@
 const Orphan = require('../models/orphanModel');
 const Sponsorship = require('../models/sponsorshipModel');
 const OrphanUpdate = require('../models/orphanUpdateModel');
+const e = require('express');
+
 
 exports.createOrphan = (req, res) => {
   const { name, age, education_status, health_condition } = req.body;
-  Orphan.create([name, age, education_status, health_condition], (err, result) => {
+
+  Orphan.findByName(name, (err, existing) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ message: 'Orphan created', id: result.insertId });
+
+    if (existing.length > 0) {
+      return res.status(400).json({ msg: 'An orphan with this name already exists' });
+    }
+
+    Orphan.create([name, age, education_status, health_condition], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.status(201).json({ message: 'Orphan added successfully', id: result.insertId });
+    });
   });
 };
 
@@ -24,6 +35,37 @@ exports.getOrphanById = (req, res) => {
   });
 };
 
+exports.deleteOrphan = (req, res) => {
+  Orphan.deleteById(req.params.id, (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Orphan deleted' });
+  });
+};
+exports.updateOrphan = (req, res) => {
+  const id = req.params.id;
+  const updates = req.body;
+
+  
+  Orphan.getById(id, (err, orphan) => {
+    if (err || orphan.length === 0) {
+      return res.status(404).json({ message: 'Orphan not found' });
+    }
+
+    const current = orphan[0];
+
+    const updatedData = [
+      updates.name || current.name,
+      updates.age || current.age,
+      updates.education_status || current.education_status,
+      updates.health_condition || current.health_condition
+    ];
+
+    Orphan.updateById(id, updatedData, (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Orphan updated successfully' });
+    });
+  });
+};
 
 
 exports.getOrphanDetails = (req, res) => {
