@@ -3,11 +3,11 @@ const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const auth = require('../middleware/auth');
 const orphanController = require('../controllers/orphanController');
-const admin = require('../middleware/admin'); 
+const role = require('../middleware/role'); 
 
 const router = express.Router();
 
-router.post('/', auth,admin,
+router.post('/', auth,role('admin'),
   body('name').notEmpty(),
   body('age').isInt({ min: 1 }),
   validate,
@@ -22,9 +22,9 @@ router.post('/sponsor', auth,
   validate,
   orphanController.sponsorOrphan);
   
-  router.delete('/:id', auth,admin, orphanController.deleteOrphan);
+  router.delete('/:id', auth,role('admin'), orphanController.deleteOrphan);
 
-  router.put('/:id', auth, admin,
+  router.put('/:id', auth, role('admin'),
     body('name').optional().notEmpty(),
     body('age').optional().isInt({ min: 1 }),
     body('education_status').optional().notEmpty(),

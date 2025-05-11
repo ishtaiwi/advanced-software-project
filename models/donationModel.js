@@ -19,3 +19,13 @@ exports.updateById = (id, data, cb) => {
 exports.deleteById = (id, cb) => {
   db.query('DELETE FROM Donations WHERE id = ?', [id], cb);
 };
+
+exports.getAllWithFees = (cb) => {
+  db.query(
+    `SELECT *,
+      amount * 0.05 AS platform_fee,
+      amount * 0.95 AS final_amount
+     FROM Donations`,
+    cb
+  );
+};

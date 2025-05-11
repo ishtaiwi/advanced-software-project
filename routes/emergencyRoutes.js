@@ -3,12 +3,13 @@ const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const auth = require('../middleware/auth');
 const emergencyController = require('../controllers/emergencyController');
+const role = require('../middleware/role');
 
 const router = express.Router();
 
-// Create campaign (admin)
 router.post('/campaigns',
   auth,
+  role('admin'),
   body('title').notEmpty(),
   body('description').notEmpty(),
   body('required_amount').isNumeric(),
@@ -16,10 +17,8 @@ router.post('/campaigns',
   emergencyController.createCampaign
 );
 
-// View all campaigns
 router.get('/campaigns', emergencyController.getCampaigns);
 
-// Donate to campaign (any authenticated user)
 router.post('/donate',
   auth,
   body('campaign_id').isInt(),

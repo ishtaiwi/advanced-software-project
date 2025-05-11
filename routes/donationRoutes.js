@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const auth = require('../middleware/auth');
 const donationController = require('../controllers/donationController');
+const role = require('../middleware/role');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post('/', auth,
   donationController.createDonation);
 
 router.get('/my', auth, donationController.getMyDonations);
-router.get('/', donationController.getAllDonations);
+router.get('/', auth,role('admin'),donationController.getAllDonations);
 
 router.put('/:id', auth,
   body('amount').isFloat({ min: 1 }),

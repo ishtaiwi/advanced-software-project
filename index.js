@@ -14,6 +14,8 @@ app.use('/api/organizations', require('./routes/organizationRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/emergency', require('./routes/emergencyRoutes'));
 app.use('/api/deliveries', require('./routes/deliveryRoutes'));
+app.use('/api/revenue', require('./routes/revenueRoutes'));
+
 
 
 

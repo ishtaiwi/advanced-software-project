@@ -37,3 +37,19 @@ exports.login = (req, res) => {
     res.json({ token, user: { id: user.id, name: user.name, role: user.role } });
   });
 };
+exports.getAllUsers = (req, res) => {
+  User.getAllUsers((err, users) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(users);
+  });
+}
+exports.deleteUser = (req, res) => {
+  const { id } = req.params;
+
+  User.deleteUser(id, (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ msg: 'User deleted' });
+  });
+
+ 
+};

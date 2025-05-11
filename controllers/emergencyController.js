@@ -57,13 +57,32 @@ exports.getCampaigns = (req, res) => {
     res.json(campaigns);
   });
 };
-
 exports.donateToCampaign = (req, res) => {
   const { campaign_id, amount } = req.body;
   const user_id = req.user.id;
 
-  Emergency.addDonation([campaign_id, user_id, amount, 'completed'], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ msg: 'Donation received', id: result.insertId });
+  Emergency.getById(campaign_id, (err, campaignData) => {
+    if (err || campaignData.length === 0) {
+      return res.status(404).json({ msg: 'Campaign not found' });
+    }
+
+    const campaign = campaignData[0];
+    if (campaign.raised_amount >= campaign.required_amount) {
+      return res.status(400).json({ msg: 'Campaign funding goal already met' });
+    }
+
+    if (campaign.raised_amount + amount > campaign.required_amount) {
+      return res.status(400).json({ msg: 'Donation exceeds required amount' });
+    }
+
+    Emergency.addDonation([campaign_id, user_id, amount, 'completed'], (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      Emergency.incrementRaisedAmount(campaign_id, amount, (err2) => {
+        if (err2) return res.status(500).json({ error: 'Donation saved but update failed' });
+
+        res.status(201).json({ msg: 'Donation accepted and campaign updated', id: result.insertId });
+      });
+    });
   });
 };
