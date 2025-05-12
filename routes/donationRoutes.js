@@ -7,7 +7,7 @@ const role = require('../middleware/role');
 
 const router = express.Router();
 
-router.post('/', auth,
+router.post('/', auth,role('admin','donor'),
   body('amount').isFloat({ min: 1 }),
   body('category').isIn(['General Fund', 'Education Support', 'Medical Aid']),
   body('payment_status').isIn(['pending', 'completed', 'failed']),

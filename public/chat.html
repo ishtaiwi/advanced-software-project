@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HopeConnect Chat</title>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .room-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .room-info input {
+      width: 45%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .room-info button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      flex: 1;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background: white;
+      border-radius: 5px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      padding: 8px;
+      margin: 5px 0;
+      background-color: #ecf0f1;
+      border-radius: 5px;
+    }
+
+    .message .sender {
+      font-weight: bold;
+      color: #2980b9;
+    }
+
+    .input-container {
+      display: flex;
+    }
+
+    #messageInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #dd1414;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      outline: none;
+    }
+    .join-button {
+      padding: 10px 20px;
+      color: white;
+      border: none;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      cursor: pointer;
+      transition: ease-in-out 0.3s;
+    }
+
+    .join-button:hover {
+      background-color: #27ae60;
+    }
+
+    .input-container button {
+      padding: 10px 20px;
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      cursor: pointer;
+      transition: ease-in-out 0.3s;
+    }
+
+    .input-container button:hover {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <h2>💬 HopeConnect Live Chat</h2>
+
+    <div class="room-info">
+      <input type="text" id="roomId" placeholder="Room ID" value="">
+      <input type="text" id="senderId" placeholder="Your User ID" value="">
+      <button class ="join-button" onclick="joinRoom()">Join Room</button>
+    </div>
+
+    <div id="messages" class="chat-box"></div>
+
+    <div class="input-container">
+      <input type="text" id="messageInput" placeholder="Type a message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:3000');
+    let roomId = '';
+    let senderId = '';
+
+    function joinRoom() {
+      roomId = document.getElementById('roomId').value;
+      senderId = document.getElementById('senderId').value;
+      socket.emit('joinRoom', { roomId });
+    }
+
+    function sendMessage() {
+      const message = document.getElementById('messageInput').value.trim();
+      if (!message) return;
+      socket.emit('chatMessage', { roomId, senderId, message });
+      document.getElementById('messageInput').value = '';
+    }
+
+    socket.on('roomMessages', (messages) => {
+      const container = document.getElementById('messages');
+      container.innerHTML = '';
+      messages.forEach(msg => {
+        container.innerHTML += `
+          <div class="message">
+            <span class="sender">${msg.sender_name}:</span> ${msg.message}
+          </div>`;
+      });
+      container.scrollTop = container.scrollHeight;
+    });
+  </script>
+</body>
+</html>
