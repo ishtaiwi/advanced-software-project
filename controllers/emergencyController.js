@@ -67,6 +67,7 @@ exports.donateToCampaign = (req, res) => {
     }
 
     const campaign = campaignData[0];
+
     if (campaign.raised_amount >= campaign.required_amount) {
       return res.status(400).json({ msg: 'Campaign funding goal already met' });
     }
@@ -81,7 +82,25 @@ exports.donateToCampaign = (req, res) => {
       Emergency.incrementRaisedAmount(campaign_id, amount, (err2) => {
         if (err2) return res.status(500).json({ error: 'Donation saved but update failed' });
 
-        res.status(201).json({ msg: 'Donation accepted and campaign updated', id: result.insertId });
+        // Re-fetch the updated campaign to check total raised amount
+        Emergency.getById(campaign_id, (err3, updatedCampaignData) => {
+          if (err3 || updatedCampaignData.length === 0) {
+            return res.status(500).json({ msg: 'Donation complete but unable to verify total raised amount' });
+          }
+
+          const updatedCampaign = updatedCampaignData[0];
+          if (updatedCampaign.raised_amount === updatedCampaign.required_amount) {
+            // Mark campaign as completed
+            Emergency.updateStatus(campaign_id, 'completed', (err4) => {
+              if (err4) {
+                return res.status(500).json({ msg: 'Donation processed but failed to update campaign status' });
+              }
+              return res.status(201).json({ msg: 'Donation accepted. Campaign is now completed.', id: result.insertId });
+            });
+          } else {
+            return res.status(201).json({ msg: 'Donation accepted and campaign updated', id: result.insertId });
+          }
+        });
       });
     });
   });

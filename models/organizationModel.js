@@ -11,3 +11,6 @@ exports.verify = (id, cb) => {
 exports.create = (data, cb) => {
   db.query('INSERT INTO Organizations (name, address) VALUES (?, ?)', data, cb);
 };
+exports.delete = (id, cb) => {
+  db.query('DELETE FROM Organizations WHERE id = ?', [id], cb);
+};

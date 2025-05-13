@@ -28,3 +28,6 @@ exports.incrementRaisedAmount = (campaign_id, amount, cb) => {
     cb
   );
 };
+exports.updateStatus = (id, status, cb) => {
+  db.query('UPDATE Emergency_Campaigns SET status = ? WHERE id = ?', [status, id], cb);
+};

@@ -3,11 +3,10 @@ const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const auth = require('../middleware/auth');
 const orphanController = require('../controllers/orphanController');
-const role = require('../middleware/role'); 
 
 const router = express.Router();
 
-router.post('/', auth,role('admin'),
+router.post('/',auth('admin'),
   body('name').notEmpty(),
   body('age').isInt({ min: 1 }),
   validate,
@@ -16,15 +15,15 @@ router.post('/', auth,role('admin'),
 router.get('/', orphanController.getAllOrphans);
 router.get('/:id', orphanController.getOrphanDetails);
 
-router.post('/sponsor', auth,
+router.post('/sponsor', auth(),
   body('orphan_id').isInt(),
   body('donation_model').notEmpty(),
   validate,
   orphanController.sponsorOrphan);
   
-  router.delete('/:id', auth,role('admin'), orphanController.deleteOrphan);
+  router.delete('/:id', auth('admin'), orphanController.deleteOrphan);
 
-  router.put('/:id', auth, role('admin'),
+  router.put('/:id', auth('admin'),
     body('name').optional().notEmpty(),
     body('age').optional().isInt({ min: 1 }),
     body('education_status').optional().notEmpty(),
@@ -34,7 +33,7 @@ router.post('/sponsor', auth,
   );
 
 
-router.post('/update', auth,
+router.post('/update', auth(),
   body('orphan_id').isInt(),
   body('update_type').isIn(['photo', 'progress_report', 'medical_update']),
   body('description').notEmpty(),

@@ -3,13 +3,12 @@ const { body } = require('express-validator');
 const validate = require('../middleware/validate');
 const revenueController = require('../controllers/revenueController');
 const auth = require('../middleware/auth');
-const role = require('../middleware/role');
 
 const router = express.Router();
 
-router.get('/summary', revenueController.getRevenueSummary);
+router.get('/summary',auth('admin'), revenueController.getRevenueSummary);
 
-router.post('/partner', auth, role('admin'),
+router.post('/partner',auth('admin'),
   body('name').notEmpty(),
   body('address').notEmpty(),
   validate,
@@ -17,6 +16,6 @@ router.post('/partner', auth, role('admin'),
 );
 
 // view verifieeeeeeeeeeed NGO partners
-router.get('/partners', revenueController.getPartners);
+router.get('/partners', auth('admin'), revenueController.getPartners);
 
 module.exports = router;

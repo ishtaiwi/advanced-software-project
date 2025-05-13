@@ -22,3 +22,10 @@ exports.createOrganization = (req, res) => {
     res.status(201).json({ msg: 'Organization created', id: result.insertId });
   });
 };
+exports.deleteOrganization = (req, res) => {
+  const { id } = req.params;
+  Org.delete(id, (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ msg: 'Organization deleted' });
+  });
+};

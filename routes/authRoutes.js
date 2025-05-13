@@ -4,7 +4,6 @@ const validate = require('../middleware/validate');
 const authController = require('../controllers/authController');
 const auth = require('../middleware/auth');
 const router = express.Router();
-const role = require('../middleware/role');
 
 router.post('/register',
   body('name').notEmpty(),
@@ -21,6 +20,6 @@ router.post('/login',
   validate,
   authController.login
 );
-router.delete('/:id', auth, role('admin'), authController.deleteUser);
-router.get('/allUsers', auth, role('admin'), authController.getAllUsers);
+router.delete('/:id', auth('admin'), authController.deleteUser);
+router.get('/allUsers', auth('admin'), authController.getAllUsers);
 module.exports = router;

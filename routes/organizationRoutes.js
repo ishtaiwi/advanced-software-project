@@ -8,10 +8,11 @@ const router = express.Router();
 
 router.get('/', orgController.getAllOrganizations);
 router.post('/', 
-  auth,
+  auth(),
   body('name').notEmpty(),
   validate,
   orgController.createOrganization);
-router.patch('/verify/:id', auth, orgController.verifyOrganization);
+router.patch('/verify/:id', auth('admin'), orgController.verifyOrganization);
+router.delete('/:id', auth('admin'), orgController.deleteOrganization);
 
 module.exports = router;
