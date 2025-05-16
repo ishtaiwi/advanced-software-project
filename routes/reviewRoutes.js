@@ -6,8 +6,7 @@ const reviewController = require('../controllers/reviewController');
 
 const router = express.Router();
 
-router.post('/',
-  auth(),
+router.post('/',  auth(),
   body('organization_id').isInt(),
   body('rating').isInt({ min: 1, max: 5 }),
   validate,

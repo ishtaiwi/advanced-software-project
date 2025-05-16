@@ -1,15 +1,20 @@
 const db = require('../config/db');
-
-exports.createUser = (data, cb) => {
-  db.query(`INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)`, data, cb);
-};
-exports.getAllUsers = (cb) => {
-  db.query(`SELECT * FROM Users`, cb);
+exports.createUser =(data,cb)=> {
+  db.query(`INSERT into Users (name,email,password,role)
+    VALUES (?,?,?,?)`,
+    data,cb);
 };
 
-exports.findByEmail = (email, cb) => {
-  db.query(`SELECT * FROM Users WHERE email = ?`, [email], cb);
+exports.getAllUsers=(cb)=>{
+  db.query('select * from Users',
+    cb);
+  };
+  
+
+exports.findByEmail =(email,cb) => {
+  db.query(`SELECT * from Users where email =?`,[email],cb);
 };
-exports.deleteUser = (id, cb) => {
-  db.query(`DELETE FROM Users WHERE id = ?`, [id], cb);
+exports.deleteUser= (id,cb)=> {
+  db.query(`DELETE from Users where id =?`,
+    [id], cb);
 };

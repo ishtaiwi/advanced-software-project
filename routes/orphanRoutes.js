@@ -6,7 +6,8 @@ const orphanController = require('../controllers/orphanController');
 
 const router = express.Router();
 
-router.post('/',auth('admin'),
+router.post('/',
+  auth('admin'),
   body('name').notEmpty(),
   body('age').isInt({ min: 1 }),
   validate,

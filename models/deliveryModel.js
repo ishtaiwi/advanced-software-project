@@ -4,10 +4,9 @@ exports.create = (data, cb) => {
   db.query('INSERT INTO Deliveries (donation_id, current_location, delivery_status) VALUES (?, ?, ?)', data, cb);
 };
 
-exports.getAll = cb => {
-  db.query('SELECT * FROM Deliveries', cb);
+exports.getAll = (cb) => {
+  db.query('SELECT * FROM Deliveries',cb);
 };
-
 exports.getById = (id, cb) => {
   db.query('SELECT * FROM Deliveries WHERE id = ?', [id], cb);
 };
