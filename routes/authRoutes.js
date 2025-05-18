@@ -20,6 +20,6 @@ router.post('/login',
   validate,
   authController.login
 );
-router.delete('/:id', auth('admin'), authController.deleteUser);
-router.get('/allUsers', auth('admin'), authController.getAllUsers);
+router.delete('/:id',auth('admin'),authController.deleteUser);
+router.get('/allUsers',auth('admin'),authController.getAllUsers);
 module.exports = router;

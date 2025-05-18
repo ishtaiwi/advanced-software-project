@@ -11,11 +11,10 @@ router.post('/campaigns',
   body('title').notEmpty(),
   body('description').notEmpty(),
   body('required_amount').isNumeric(),
-  validate,
-  emergencyController.createCampaign
+  validate,emergencyController.createCampaign
 );
 
-router.get('/campaigns', emergencyController.getCampaigns);
+router.get('/campaigns',emergencyController.getCampaigns);
 
 router.post('/donate',
  auth(),
