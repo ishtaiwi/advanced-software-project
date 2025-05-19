@@ -2,7 +2,7 @@ const volunteer=require('../models/volunteerModel');
 const request =require('../models/volunteerRequestModel');
 const match =require('../models/volunteerMatchModel');
 
-exports.registerVolunteer=(req,res)=>{
+exports.registerVolunteer=(req,res) =>{
   const {service_type,availability}=req.body;
   const user_id=req.user.id;
 

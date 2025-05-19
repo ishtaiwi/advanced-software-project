@@ -61,7 +61,7 @@ exports.updateDonationStatus =(req,res)=>{
 exports.deleteDonation=(req,res)=>{
   const donationId =req.params.id;
 
-  Donation.deleteById(donationId,(err)=>{
+  Donation.deleteById(donationId,(err) =>{
     if (err) return res.status(500).json({error:err.message});
     res.json({message:'Donation deleted'});
   });

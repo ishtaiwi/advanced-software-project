@@ -1,7 +1,7 @@
 const Donation =require('../models/donationModel');
 const db =require('../config/db');
 
-exports.getRevenueSummary =(res)=>{
+exports.getRevenueSummary =(req,res)=>{
   Donation.getAllWithFees((err,rows)=>{
     if (err) return res.status(500).json({error:err.message});
 
@@ -29,7 +29,7 @@ exports.addPartner =(req,res)=>{
   );
 };
 
-exports.getPartners=(res)=>{
+exports.getPartners=(req,res)=>{
   db.query(
     'SELECT * from Organizations where verified = TRUE',
     (err,rows)=> {

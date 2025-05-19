@@ -19,7 +19,7 @@ exports.createOrphan =(req,res) => {
   });
 };
 
-exports.getAllOrphans =(res)=>
+exports.getAllOrphans =(req,res)=>
  {
   orphan.getAll((err,result) =>   
   {
