@@ -12,7 +12,7 @@ exports.registerVolunteer=(req,res) =>{
   });
 };
 
-exports.getVolunteers =(res)=>{
+exports.getVolunteers =(req,res)=>{
   volunteer.getAll((err,volunteers)=>{
     if (err) return res.status(500).json({error:err.message});
     res.json(volunteers);
@@ -28,7 +28,7 @@ exports.createRequest=(req,res)=>{
   });
 };
 
-exports.getRequests =(res)=>{
+exports.getRequests =(req,res)=>{
   request.getAll((err,requests)=>{
     if (err) return res.status(500).json({error:err.message});
     res.json(requests);
@@ -44,7 +44,7 @@ exports.matchVolunteer=(req,res)=> {
   });
 };
 
-exports.getMatches=(res)=>{
+exports.getMatches=(req,res)=>{
   match.getAll((err,matches)=> {
     if (err) return res.status(500).json({error:err.message});
     res.json(matches);

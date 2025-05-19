@@ -16,5 +16,5 @@ router.post('/partner',
 );
 
 // view verifieeeeeeeeeeed NGO partners
-router.get('/partners',auth('admin'),revenueController.getPartners);
+router.get('/partners',auth(),revenueController.getPartners);
 module.exports =router;
