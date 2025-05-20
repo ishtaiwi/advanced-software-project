@@ -40,28 +40,28 @@ exports.deleteOrphan = (req,res)=> {
     res.json({message:'orphan deleted'});
   });
 };
-exports.updateOrphan =(req,res)=> {
-  const id=req.params.id;
-  const updates=req.body;
+exports.updateOrphan = (req, res) => {
+  const id = req.params.id;
+  const updates = req.body;
 
-  
-  orphan.getById(id,(err,orphan)=>{
-    if (err || orphan.length === 0){
-      return res.status(404).json({message:'orphan not found'});
+  orphan.getById(id, (err, orphanData) => {
+    if (err || orphanData.length === 0) {
+      return res.status(404).json({ message: 'orphan not found' });
     }
 
-    const current=orphan[0];
+    const current = orphanData[0];
 
-    const updatedData =[
+    const updatedData = [
       updates.name || current.name,
       updates.age || current.age,
       updates.education_status || current.education_status,
       updates.health_condition || current.health_condition
     ];
 
-    orphan.updateById(id,updatedData,(err)=>{
-      if(err) return res.status(500).json({error:err.message});
-      res.json({message:'orphan updated successfully'});
+    // الآن هذا يستدعي الدالة من الموديل صح
+    orphan.updateById(id, updatedData, (err) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'orphan updated successfully' });
     });
   });
 };

@@ -24,7 +24,6 @@ exports.deleteById = (id,cb)=> {
   db.query('DELETE FROM Orphans WHERE id =?',
     [id], cb);
 };
-exports.updateById =(id,data,cb)=> {
-  db.query('UPDATE Orphans SET name =? ,age = ?,education_status =?,health_condition =?where id =?',
-    [...data,id],cb);
+exports.updateById = (id,data,cb) => {
+  db.query('UPDATE Orphans SET name = ?,age = ?,education_status =?,health_condition =?where id =?', [...data,id],cb);
 };
